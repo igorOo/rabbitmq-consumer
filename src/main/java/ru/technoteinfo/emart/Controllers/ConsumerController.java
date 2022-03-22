@@ -6,13 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.technoteinfo.emart.Entity.LogSendSms;
+import ru.technoteinfo.emart.Entity.Logs.LogSendSms;
 import ru.technoteinfo.emart.Pojo.Response.SmsRabbit;
-import ru.technoteinfo.emart.Repositories.LogSendSmsRepository;
+import ru.technoteinfo.emart.Repositories.Logs.LogSendSmsRepository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 
 @Component
 @Slf4j
@@ -36,6 +37,7 @@ public class ConsumerController {
         logSendSmsRepository.save(logSendSms);
         try
         {
+            //TODO: в релизе поменять комментарий, чтобы можно было отправлять смс
             Process proc = Runtime.getRuntime().exec("cmd /c echo \"phone: "+rabbitMessage.getPhone()+", code: "+rabbitMessage.getCode()+" \"");
 //            Process proc = Runtime.getRuntime().exec("gammu sendsms TEXT "+ rabbitMessage.getPhone()
 //                    +" -unicode -text \"Ваш код подтверждения - "+rabbitMessage.getCode()+"\"");
@@ -44,6 +46,7 @@ public class ConsumerController {
             String responseSms = output.readLine();
             log.info(responseSms);
             logSendSms.setResponse(responseSms);
+            logSendSms.setUpdatedAt(new Date());
             logSendSmsRepository.save(logSendSms);
         }
         catch (IOException | InterruptedException e)

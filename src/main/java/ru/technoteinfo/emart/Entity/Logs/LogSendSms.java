@@ -1,4 +1,4 @@
-package ru.technoteinfo.emart.Entity;
+package ru.technoteinfo.emart.Entity.Logs;
 
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLInetType;
 import lombok.Getter;
@@ -41,17 +41,19 @@ public class LogSendSms {
     private Date createdAt;
 
     @Column(name = "updated_at")
-    private Date updatedAt;
+    private Date updatedAt = new Date();
 
     public LogSendSms(String phone, Integer code){
         this.setPhone(phone);
         this.setCode(code);
+        this.setCreatedAt(new Date());
     }
 
     public LogSendSms(String phone, Integer code, String response){
         this.setPhone(phone);
         this.setCode(code);
         this.setResponse(response);
+        this.setCreatedAt(new Date());
     }
 
     public LogSendSms(String phone, Integer code, String response, InetAddress ipAddress){
@@ -59,6 +61,7 @@ public class LogSendSms {
         this.setCode(code);
         this.setResponse(response);
         this.setIpAddress(ipAddress);
+        this.setCreatedAt(new Date());
     }
 
 }
